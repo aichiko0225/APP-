@@ -3406,18 +3406,19 @@ func execute(command: String, stdin: String) -> String {
 
 但是，*不*要用这个例外来证明可以省略某些正常读者可能需要的相关信息。例如，对于 `canonicalName` 名字的属性，不要省略注释（只有合理的时候才可以只写 `/// The canonical name.`），因为正常读者可能不知道术语“规范名字”在上下文中的含义。 使用注释是定义该术语的好机会。
 
+
+
+
 ### Android开发规范
 
-----
-
-# Android开发规范
-
-## 开发环境
+#### 开发环境
 
 - 集成开发环境： [Android Studio](http://www.android-studio.org/)
 - 构建编译环境： [**Gradle +**](https://services.gradle.org/distributions/)    
 
-### 顶级构建文件配置
+</br>
+
+#### 顶级构建文件配置
 
 ```gradle
 buildscript {
@@ -3450,7 +3451,9 @@ allprojects {
 
 关于 MAVEN库配置，除去以上等根据内部库地址可更改添加。
 
-### 模块级构建文件配置
+</br>
+
+#### 模块级构建文件配置
 
 > SDK 版本（API 级别）即编辑使用的 android sdk 的版本，不同版本有不同的特性。
 
@@ -3476,7 +3479,9 @@ dependencies {
 
 **为了避免引起兼容性问题，项目构建与开发时请遵循规定的适配版本，以及做好相应的系统适配。**
 
-## 项目包名规范
+</br>
+
+#### 项目包名规范
 
 **以域名反写形式加项目名称**
 
@@ -3484,11 +3489,13 @@ dependencies {
 <顶级域名>.<公司名称>.<项目名>
 ```
 
-## 命名规范
+</br>
+
+#### 命名规范
 
 **请使用英文或其英文缩写形式，不能使用中文简拼。保证变量命名语义化**
 
-### Package 规范
+##### Package 规范
 
 项目包结构主要**以业务模块划分**
 
@@ -3510,7 +3517,9 @@ dependencies {
 | `.service.`  | 对应业务层下的所有的接口服务   |
 | `.model.`    | 对应业务层下的所有的数据提供   |
 
-### Class 类名规范
+</br>
+
+##### Class 类名规范
 
 类名都以`UpperCamelCase`风格编写。
 
@@ -3536,7 +3545,9 @@ dependencies {
 
 > 注意：如果项目采用MVP，所有Model、View、Presenter的接口都以I为前缀，不加后缀，其他的接口采用上述命名规则。
 
-### 方法名
+</br>
+
+##### 方法名
 
 方法名都以`lowerCamelCase`风格编写。
 
@@ -3557,7 +3568,9 @@ dependencies {
 | removeXX()             | 移除数据或者视图等，如removeView();                       |
 | drawXX()               | 绘制数据或效果相关的，使用draw前缀标识                    |
 
-### 常量名
+</br>
+
+##### 常量名
 
 常量名命名模式为`CONSTANT_CASE`，全部字母大写，用下划线分隔单词。那，到底什么算是一个常量？
 
@@ -3606,11 +3619,15 @@ static final String[] nonEmptyArray = {"these", "can", "change"};
 
 > 注意：所有的VO（值对象）统一采用标准的lowerCamelCase风格编写，所有的DTO（数据传输对象）就按照接口文档中定义的字段名编写。
 
-#### 参数名
+</br>
+
+##### 参数名
 
 参数名以`lowerCamelCase`风格编写。 参数应该避免用单个字符命名。
 
-#### 局部变量名
+</br>
+
+##### 局部变量名
 
 局部变量名以`lowerCamelCase`风格编写，比起其它类型的名称，局部变量名可以有更为宽松的缩写。
 
@@ -3618,22 +3635,26 @@ static final String[] nonEmptyArray = {"these", "can", "change"};
 
 即使局部变量是final和不可改变的，也不应该把它示为常量，自然也不能用常量的规则去命名它。
 
-#### 临时变量
+</br>
+
+##### 临时变量
 
 临时变量通常被取名为`i`、`j`、`k`、`m`和`n`，它们一般用于整型；`c`、`d`、`e`，它们一般用于字符型。 如：`for (int i = 0; i < len ; i++)`。
 
-#### 类型变量名
+</br>
+
+##### 类型变量名
 
 类型变量可用以下两种风格之一进行命名：
 
 1. 单个的大写字母，后面可以跟一个数字(如：`E`, `T`, `X`, `T2`)。
 2. 以类命名方式(参考[3.2 类名](http://icome-book.icomecloud.com/docs/android/rule/android/#32-%E7%B1%BB%E5%90%8D))，后面加个大写的`T`(如：`RequestT`, `FooBarT`)。
 
+</br>
 
+##### Resources 资源命名
 
-### Resources 资源命名
-
-#### 控件 ID
+###### 控件 ID
 
 ```
 <控件缩写>_<作用范围|功能模块>[_动作]
@@ -3660,7 +3681,9 @@ static final String[] nonEmptyArray = {"these", "can", "change"};
 
  DatePicker 对应的缩写为 date_picker
 
-#### Layout 资源
+</br>
+
+###### Layout 资源
 
 ```
 <模块名>_<组件类型>_[作用范围_]<功能>
@@ -3677,7 +3700,9 @@ static final String[] nonEmptyArray = {"these", "can", "change"};
 | `dialog_[作用范围_]<功能>`    | `Dialog`布局                 |
 | `widget_[作用范围_]<功能>`    | 小部件或者自定义控件布局     |
 
-#### Drawable 资源
+</br>
+
+###### Drawable 资源
 
 ```
 <模块名>_<前缀|业务功能描述>_<控件|范围>[_后缀]
@@ -3701,7 +3726,9 @@ static final String[] nonEmptyArray = {"these", "can", "change"};
 | `selected` | 选中状态   |
 | `disable`  | 不可用状态 |
 
-#### 动画文件命名
+</br>
+
+###### 动画文件命名
 
 ```
 <模块名>_<动画效果|逻辑名称>_<方向>_[anim]
@@ -3718,7 +3745,9 @@ static final String[] nonEmptyArray = {"these", "can", "change"};
 | `zoom_enter_anim`       | 变形进入 |
 | `shrink_to_middle_anim` | 向中缩小 |
 
-#### 颜色资源命名
+</br>
+
+###### 颜色资源命名
 
 **color 资源使用#AARRGGBB 格式，写入 module_colors.xml 文件中**
 
@@ -3732,7 +3761,9 @@ static final String[] nonEmptyArray = {"these", "can", "change"};
 <color name="module_btn_bg_color">#33b5e5e5</color>
 ```
 
-#### Dimen 资源命名
+</br>
+
+###### Dimen 资源命名
 
 **dimen 资源以小写单词+下划线方式命名，写入 module_dimens.xml 文件中**
 
@@ -3746,7 +3777,9 @@ static final String[] nonEmptyArray = {"these", "can", "change"};
 <dimen name="module_horizontal_line_height">1dp</dimen>
 ```
 
-#### style 资源命名
+</br>
+
+###### style 资源命名
 
 **style 资源采用小写单词+下划线方式命名，写入 module_styles.xml 文件中**
 
@@ -3762,7 +3795,9 @@ static final String[] nonEmptyArray = {"these", "can", "change"};
 </style>
 ```
 
-#### string 资源命名
+</br>
+
+###### string 资源命名
 
 **string 资源文件或者文本用到字符需要全部写入 module_strings.xml 文件中**
 
@@ -3777,7 +3812,9 @@ moudule_login_tips
 module_homepage_notice_desc
 ```
 
-#### 大分辨率图片资源
+</br>
+
+###### 大分辨率图片资源
 
 **大分辨率图片（单维度超过 1000）大分辨率图片建议统一放在 xxhdpi 目录下管理，否则将导致占用内存成倍数增加。**
 
@@ -3801,9 +3838,11 @@ module_homepage_notice_desc
 
 
 
-## 代码规范
+</br>
 
-### Android基本组件
+#### 代码规范
+
+##### Android基本组件
 
 **`强制`**  **activity间的数据通信，对于数据量比较大的，避免使用 Intent + Parcelable 的方式，推荐使用 EventBus 等替代方案，以免造成 TransactionTooLargeException。**
 
@@ -4438,7 +4477,7 @@ public class MainActivity extends AppCompatActivity {
 
 </br>
 
-### UI与布局
+##### UI与布局
 
 **`强制`**  **布局中不得不使用 `ViewGroup` 多重嵌套时，不要使用 `LinearLayout` 嵌套，改用`RelativeLayout`、 `ConstraintLayout`，可以有效降低嵌套数。**
 
@@ -4623,7 +4662,7 @@ Android 的帧动画可以使用`AnimationDrawable` 实现，但是如果你的�
 
 </br>
 
-### 进程、线程与消息通信
+##### 进程、线程与消息通信
 
 **`强制 `** **不要通过`Intent` 在`Android` 基础组件之间传递大数据（binder transaction缓存为1MB），可能导致OOM。**
 
@@ -5201,7 +5240,7 @@ String mSelectionClause =	"var = " + mUserInput;
 
 </br>
 
-### Bit map、Drawable 与动画
+##### Bit map、Drawable 与动画
 
 **`强制`**  **加载大图片或者一次性加载多张图片，应该在异步线程中进行。图片的加载，涉及到 IO 操作，以及 CPU 密集操作，很可能引起卡顿。**
 
@@ -5391,4 +5430,884 @@ public static Bitmap decodeSampledBitmapFromResource(Resources res, int resId,
 反例：
 
 不经压缩显示原图。
+
+</br>
+
+**`强制`使用完毕的图片，应该及时回收，释放宝贵的内存。**
+
+正例：
+
+```java
+Bitmap bitmap = null;
+
+loadBitmapAsync(new OnResult(result){
+
+		bitmap = result;
+
+});
+
+...使用该 bitmap...
+
+//使用结束，在 2.3.3 及以下需要调用 recycle()函数，在 2.3.3 以上 GC 会自动管理，除非你明确不需要再用。
+
+if (Build.VERSION.SDK_INT <= 10) {
+
+		bitmap.recycle();
+
+}
+
+bitmap = null;
+```
+
+反例：
+
+使用完成图片，始终不释放资源。
+
+</br>
+
+`建议`  **针对不同的屏幕密度，提供对应的图片资源，使内存占用和显示效果达到合理的平衡。如果为了节省包体积，可以在不影响	UI 效果的前提下，省略低密度图片。**
+
+</br>
+
+**`强制`  在`Activity.onPause()` 或`Activity.onStop() `回调中，关闭当前`activity` 正在执行的的动画。**
+
+正例
+
+```java
+public class MyActivity extends Activity {
+
+    ImageView mImageView;
+
+    Animation mAnimation;
+
+    Button mBtn;
+
+    /**	首次创建 activity 时调用	*/
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+
+        super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.main);
+
+        mImageView = (ImageView)findViewById(R.id.ImageView01);
+
+        mAnimation = AnimationUtils.loadAnimation(this, R.anim.anim);
+
+        mBtn= (Button)findViewById(R.id.Button01);
+
+        mBtn.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+          		  mImageView.startAnimation(mAnimation);
+
+            }
+
+        });
+
+    }
+
+    public void onPause() {
+
+        //页面退出，及时清理动画资源
+        mImageView.clearAnimation()
+
+    }
+
+}
+
+ 
+```
+
+反例：
+
+页面退出时，不关闭该页面相关的动画。
+
+
+
+`建议`  **在动画或者其他异步任务结束时，应该考虑回调时刻的环境是否还支持业务处理。例如	`Activity` 的	onStop()函数已经执行，且在该函数中主动释放了资源，此时回调中如果不做判断就会空指针崩溃。**
+
+正例：
+
+```java
+public class MyActivity extends Activity {
+
+    private ImageView mImageView;
+
+    private Animation mAnimation;
+
+    /**	首次创建 activity 时调用	*/
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+
+        super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.main);
+
+        mImageView = (ImageView)findViewById(R.id.ImageView01);
+
+        mAnimation = AnimationUtils.loadAnimation(this, R.anim.anim);
+
+        mAnimation.setAnimationListener(new AnimationListener() {
+
+            @Override
+            public void onAnimationEnd(Animation arg0) {
+
+                //判断一下资源是否被释放了
+                if (mImageView != null) {
+
+                   mImageView.clearAnimation();
+
+                }
+
+            }
+
+        });
+
+        mImageView.startAnimation(mAnimation);
+
+    }
+
+}
+
+ 
+```
+
+反例：
+
+动画结束回调中，直接使用资源不加判断，导致异常。
+
+</br>
+
+`建议`  **使用`inBitmap` 重复利用内存空间，避免重复开辟新内存。**
+
+正例：
+
+```java
+public static Bitmap decodeSampledBitmapFromFile(String filename, int reqWidth, int
+reqHeight, ImageCache cache) {
+
+    final BitmapFactory.Options options = new BitmapFactory.Options();
+
+    ...
+
+    BitmapFactory.decodeFile(filename, options);
+
+    ...
+
+    //	如果在 Honeycomb 或更新版本系统中运行，尝试使用 inBitmap
+    if (Utils.hasHoneycomb()) {
+
+  		  addInBitmapOptions(options, cache);
+
+    }
+
+    ...
+
+    return BitmapFactory.decodeFile(filename, options);
+
+}
+
+private static void addInBitmapOptions(BitmapFactory.Options options,
+ImageCache cache) {
+
+    // inBitmap 只处理可变的位图，所以强制返回可变的位图
+    options.inMutable = true;
+
+    if (cache != null) {
+
+  		  Bitmap inBitmap = cache.getBitmapFromReusableSet(options);
+
+        if (inBitmap != null) {
+
+        options.inBitmap = inBitmap;
+
+        }
+
+    }
+
+}
+```
+
+</br> 
+
+`建议`	**ARGB_565 代替ARGB_888，在不怎么降低视觉效果的前提下，减少内存占用。**
+
+说明：
+
+`android.graphics.Bitmap.Config` 类中关于图片颜色的存储方式定义：
+
+1) ALPHA_8		代表	8 位	Alpha 位图。
+
+2)	ARGB_4444	代表	16 位	ARGB 位图。
+
+3)	ARGB_8888	代表	32 位	ARGB 位图。
+
+4)	RGB_565	     代表	8 位	RGB 位图。
+
+
+
+位图位数越高，存储的颜色信息越多，图像也就越逼真。大多数场景使用的是ARGB_8888 和RGB_565，RGB_565 能够在保证图片质量的情况下大大减少内存的开销，是解决**OOM**的一种方法。
+
+但是一定要注意RGB_565 是没有透明度的，如果图片本身需要保留透明度，那么就不能使用RGB_565。
+
+正例：
+
+```java
+Config config = drawableSave.getOpacity() != PixelFormat.OPAQUE ? Config.ARGB_8888 :
+
+Config.RGB_565;
+
+Bitmap bitmap = Bitmap.createBitmap(w, h, config);
+```
+
+反例：
+
+```java
+Bitmap newb = Bitmap.createBitmap(width, height, Config.ARGB_8888);
+```
+
+</br> 
+
+`建议`  **尽量减少`Bitmap（BitmapDrawable）`的使用，尽量使用纯色（ColorDrawable）、渐变色（GradientDrawable）、StateSelector（StateListDrawable）等与	Shape 结合的形式构建绘图。**
+
+</br> 
+
+`建议`  **谨慎使用gif 图片，注意限制每个页面允许同时播放的gif 图片，以及单个gif 图片的大小。**
+
+</br> 
+
+`建议`  **大图片资源不要直接打包到apk，可以考虑通过文件仓库远程下载，减小包体积。**
+
+</br> 
+
+`建议`  **选择性开启复杂动画，以实现一个整体较优的性能和体验。**
+
+</br> 
+
+`建议`  **在有强依赖`onAnimationEnd`回调的交互时，如动画播放完毕才能操作页面，`onAnimationEnd`可能会因各种异常没被回调，建议加上超时保护或通过`postDelay`替代`onAnimationEnd`。**
+
+正例：
+
+```java
+View v = findViewById(R.id.xxxViewID);
+
+final FadeUpAnimation anim = new FadeUpAnimation(v);
+
+anim.setInterpolator(new AccelerateInterpolator());
+
+anim.setDuration(1000);
+
+anim.setFillAfter(true);
+
+new Handler().postDelayed(new Runnable() {
+
+    public void run() {
+
+        if (v != null) {
+
+           v.clearAnimation();
+
+        }
+
+    }
+
+}, anim.getDuration());
+
+v.startAnimation(anim);
+```
+
+</br> 
+
+`建议`  **当`View Animation` 执行结束时，调用`View.clearAnimation()`释放相关资源。**
+
+正例：
+
+```java
+View v = findViewById(R.id.xxxViewID);
+
+final FadeUpAnimation anim = new FadeUpAnimation(v);
+
+anim.setInterpolator(new AccelerateInterpolator());
+
+anim.setDuration(1000);
+
+anim.setFillAfter(true);
+
+anim.setAnimationListener(new AnimationListener() {
+
+    @Override
+    public void onAnimationEnd(Animation arg0) {
+
+        //判断一下资源是否被释放了
+        if (v != null) {
+
+           v.clearAnimation();
+
+        }
+
+    }
+
+});
+
+v.startAnimation(anim);
+```
+
+</br> 
+
+##### 安全
+
+**`强制`  使用`PendingIntent` 时，禁止使用空`Intent`，同时禁止使用隐式`Intent`**
+
+说明：
+
+1)	使用`PendingIntent` 时，使用了空`Intent`,会导致恶意用户劫持修改`Intent` 的内容。禁止使用一个空`Intent` 去构造`PendingIntent`，构造`PendingIntent` 的`Intent`一定要设置ComponentName 或者	action。
+
+2)	`PendingIntent` 可以让其他APP 中的代码像是运行自己APP 中。`PendingIntent`的`Intent` 接收方在使用该`Intent` 时与发送方有相同的权限。在使用`PendingIntent`时，`PendingIntent` 中包装的`Intent` 如果是隐式的，容易遭到劫持，导致信息泄露。
+
+正例：
+
+```java
+Intent intent = new Intent(this, SomeActivity.class);
+
+PendingIntent pendingIntent = PendingIntent.getActivity(this, 1, intent, PendingIntent.FLAG_
+
+UPDATE_CURRENT);
+
+try {
+
+		pendingIntent.send();
+
+} catch (PendingIntent.CanceledException e) {
+
+		e.printStackTrace();
+
+}
+```
+
+反例1：
+
+```java
+Bundle addAccountOptions = new Bundle();
+
+mPendingIntent = PendingTntent.getBroadcast(this, 0, new Intent, 0);
+
+addAccountOptions.putParcelable(KEY_CALLER_IDENTITY, mPendingIntent);
+
+addAccountOptions.putBoolean(EXTRA_HAS_MULTIPLE_USERS,
+
+Utils.hasMultipleUsers(this));
+
+AccountManager.get(this).addAccount(
+
+  accountType,
+
+  null,
+
+  null,
+
+  addAccountOptions,
+
+  null,
+
+  mCallback,
+
+  null);
+```
+
+反例2：
+
+`mPendingIntent` 是通过`new Intent()` 构造原始 `Intent` 的，所以为“双无” `Intent`，这个
+
+`PendingIntent` 最终被通过`AccountManager.addAccount` 方法传递给了恶意APP 接口。
+
+```java
+Intent intent = new Intent("com.test.test.pushservice.action.METHOD");
+
+intent.addFlags(32);
+
+intent.putExtra("app",
+
+PendingIntent.getBroadcast(this, 0, intent, 0));
+```
+
+如上代码`PendingIntent.getBroadcast`，`PendingItent` 中包含的`Intent` 为隐式，因此当`PendingIntent` 触发执行时，发送的`Intent`很可能被嗅探或者劫持，导致`Intent` 内容泄漏。
+
+</br> 
+
+**`强制`  禁止使用常量初始化矢量参数构建`IvParameterSpec`，建议IV 通过随机方式产生。**
+
+说明：
+
+使用固定初始化向量，结果密码文本可预测性会高得多，容易受到字典式攻击。iv的作用主要是用于产生密文的第一个block，以使最终生成的密文产生差异（明文相同的情况下），使密码攻击变得更为困难，除此之外	iv 并无其它用途。因此	iv 通过随机方式产生是一种十分简便、有效的途径。
+
+正例：
+
+```java
+byte[] rand = new byte[16];
+
+SecureRandom r = new SecureRandom();
+
+r.nextBytes(rand);
+
+IvParameterSpec iv = new IvParameterSpec(rand);
+```
+
+反例：
+
+```java
+IvParameterSpec iv_ = new IvParameterSpec("1234567890".getBytes());
+
+System.out.println(iv_.getIV());
+```
+
+</br> 
+
+**`强制`将`android:allowbackup` 属性设置为	false，防止adb backup 导出数据。**
+
+说明：
+
+在AndroidManifest.xml	文件中为了方便对程序数据的备份和恢复在Android API level 8 以后增加了	`android:allowBackup` 属性值。默认情况下这个属性值为	true,故当`allowBackup` 标志值为true 时，即可通过adb backup 和adb restore 来备份和恢复应用程序数据。
+
+正例：
+
+```xml
+<application
+
+  android:allowBackup="false"
+
+  android:largeHeap="true"
+
+  android:icon="@drawable/test_launcher"
+
+  android:label="@string/app_name"
+
+  android:theme="@style/AppTheme" >
+```
+
+</br>
+
+**`强制`  在实现的`HostnameVerifier` 子类中，需要使用`verify` 函数效验服务器主机名的合法性，否则会导致恶意程序利用中间人攻击绕过主机名效验。**
+
+说明：
+
+在握手期间，如果	URL	的主机名和服务器的标识主机名不匹配，则验证机制可以回调此接口的实现程序来确定是否应该允许此连接。如果回调内实现不恰当，默认接受所有域名，则有安全风险。
+
+正例：
+
+```java
+HostnameVerifier hnv = new HostnameVerifier() {
+
+    @Override
+    public boolean verify(String hostname, SSLSession session) {
+
+        //示例
+
+        if("yourhostname".equals(hostname)){
+
+            return true;
+
+        } else {
+
+            HostnameVerifier hv = HttpsURLConnection.getDefaultHostnameVerifier();
+
+            return hv.verify(hostname, session);
+
+        }
+
+     }
+
+};
+```
+
+反例：
+
+```java
+HostnameVerifier hnv = new HostnameVerifier() {
+
+    @Override
+    public boolean verify(String hostname, SSLSession session) {
+
+        //总是返回 true，接受任意域名服务器
+        return true;
+
+    }
+
+};
+
+HttpsURLConnection.setDefaultHostnameVerifier(hnv);
+```
+
+</br> 
+
+**`强制`利用`X509TrustManager` 子类中的`checkServerTrusted` 函数效验服务器端证书的合法性。**
+
+说明：
+
+在实现的`X509TrustManager` 子类中未对服务端的证书做检验，这样会导致不被信任的证书绕过证书效验机制。
+
+反例：
+
+```java
+TrustManager tm = new X509TrustManager() {
+
+    public void checkClientTrusted(X509Certificate[] chain, String authType)
+        throws CertificateException {
+
+            //do nothing，接受任意客户端证书
+
+        }
+
+    public void checkServerTrusted(X509Certificate[] chain, String authType)
+				throws CertificateException {
+
+   		 //do nothing，接受任意服务端证书
+
+    }
+
+    public X509Certificate[] getAcceptedIssuers() {
+
+        return null;
+
+    }
+
+};
+
+sslContext.init(null, new TrustManager[] { tm }, null);
+```
+
+</br> 
+
+**`强制`  META-INF 目录中不能包含如.apk,.odex,.so 等敏感文件，该文件夹没有经过签名，容易被恶意替换。**
+
+</br>
+
+**`强制`  Receiver/Provider 不能在毫无权限控制的情况下，将`android:export` 设置为true。**
+
+</br> 
+
+`参考`  数据存储在Sqlite或者轻量级存储需要对数据进行加密，取出来的时候进行解密。
+
+</br> 
+
+**`强制`  阻止`webview` 通过	`file:schema` 方式访问本地敏感数据。**
+
+</br>  
+
+**`强制`  不要广播敏感信息，只能在本应用使用`LocalBroadcast`，避免被别的应用收到，或者`setPackage` 做限制。**
+
+</br> 
+
+**`强制`不要把敏感信息打印到log 中。**
+
+说明：
+
+在APP 的开发过程中，为了方便调试，通常会使用	log 函数输出一些关键流程的信息，这些信息中通常会包含敏感内容，如执行流程、明文的用户名密码等，这会让攻击者更加容易的了解	APP 内部结构方便破解和攻击，甚至直接获取到有价值的敏感信息。
+
+反例：
+
+```java
+String username = "log_leak";
+
+String password = "log_leak_pwd";
+
+Log.d("MY_APP", "usesname" + username);
+
+Log.d("MY_APP", "password" + password, new Throwable());
+
+Log.v("MY_APP", "send message to server ");
+```
+
+以上代码使用Log.d Log.v	打印程序的执行过程的username 等调试信息，日志没有关闭，攻击者可以直接从Logcat 中读取这些敏感信息。所以在产品的线上版本中关闭调试接口，不要输出敏感信息。
+
+</br> 
+
+**`强制`  对于内部使用的组件，显示设置组件的"`android:exported`"属性为false。**
+
+说明：
+
+Android应用使用Intent机制在组件之间传递数据，如果应用在使用	getIntent()，getAction()，`Intent.getXXXExtra()`获取到空数据、异常或者畸形数据时没有进行异常捕获，应用就会发生	Crash，应用不可使用（本地拒绝服务）。恶意应用可通过向受害者应用发送此类空数据、异常或者畸形数据从而使应用产生本地拒绝服务。
+
+</br> 
+
+**`强制`  应用发布前确保`android:debuggable` 属性设置为false。**
+
+</br> 
+
+**`强制` 使用Intent Scheme URL 需要做过滤。**
+
+说明：
+
+如果浏览器支持Intent Scheme Uri 语法，如果过滤不当，那么恶意用户可能通过浏览器	js 代码进行一些恶意行为，比如盗取cookie 等。如果使用了`Intent.parseUri`函数，获取的Intent必须严格过滤，Intent至少包含addCategory(“android.intent.category.BROWSABLE”)，setComponent(null)，setSelector(null)3 个策略。
+
+正例：
+
+```java
+//	将 intent scheme URL 转换为 intent 对象
+
+Intent intent = Intent.parseUri(uri);
+
+//	禁止没有 BROWSABLE category 的情况下启动 activity
+
+intent.addCategory("android.intent.category.BROWSABLE");
+
+intent.setComponent(null);
+
+intent.setSelector(null);
+
+//	使用 intent 启动 activity
+
+context.startActivityIfNeeded(intent, -1)
+  
+```
+
+反例：
+
+```java
+Intent intent = Intent.parseUri(uri.toString().trim().substring(15), 0);
+
+intent.addCategory("android.intent.category.BROWSABLE");
+
+context.startActivity(intent);
+
+```
+
+</br> 
+
+**`强制`  密钥加密存储或者经过变形处理后用于加解密运算，切勿硬编码到代码中。**
+
+说明：
+
+应用程序在加解密时，使用硬编码在程序中的密钥，攻击者通过反编译拿到密钥可以轻易解密APP 通信数据。
+
+</br> 
+
+**`强制`  将所需要动态加载的文件放置在	apk 内部，或应用私有目录中，如果应用必须要把所加载的文件放置在可被其他应用读写的目录中(比如	sdcard)，建议对不可信的加载源进行完整性校验和白名单处理，以保证不被恶意代码注入。**
+
+</br> 
+
+**`强制`  除非min API level >=17，请注意`addJavascriptInterface` 的使用。**
+
+说明：
+
+API level>=17，允许js 被调用的函数必须以`@JavascriptInterface` 进行注解，因此不受影响，对于	API level < 17，尽量不要使用	addJavascriptInterface，如果一定要用，那么：
+
+1) 使用https 协议加载	URL，使用证书校验，防止访问的页面被篡改挂马。
+
+2) 对加载URL 做白名单过滤、完整性校验等防止访问的页面被篡改。
+
+3) 如果加载本地html,应该会	HTML 内置在	APK 中，以及对	HTML 页面进行完整性校验。
+
+</br> 
+
+**`强制`	Android 的AES/DES/DESede 加密算法时，不要使用默认的加密模式ECB，应显示指定使用	CBC 或	CFB 加密模式。**
+
+说明：
+
+加密模式	ECB、CBC、CFB、OFB 等，其中ECB 的安全性较弱，会使相同的明文在不同的时候产生相同的密文，容易遇到字典攻击，建议使用CBC 或CFB 模式。
+
+1) ECB：Electronic codebook，电子密码本模式。
+
+2) CBC：Cipher-block chaining，密码分组链接模式。
+
+3) CFB：Cipher feedback，密文反馈模式。
+
+4) OFB：Output feedback，输出反馈模式。
+
+</br> 
+
+`建议`  **不要使用`loopback` 来通信敏感信息。**
+
+</br> 
+
+`建议`  **对于不需要使用File 协议的应用，设置`webView.getSettings().setAllowFileAccess(false) `，经用掉 File 协议。对于需要使用File 协议的应用，设置`webView.getSettings().setJavaScriptEnabled(false)` 禁止File协议调用JavaScript，显式设置。**
+
+</br> 
+
+**`强制`  Android APP 在HTTPS 通信中，验证策略需要改成严格模式。说明：Android APP 在	HTTPS 通信中，使用`ALLOW_ALL_HOSTNAME_VERIFIER`，表示允许和所有的HOST 建立SSL 通信，这会存在中间人攻击的风险，最终导致敏感信息可能会被劫持，以及其他形式的攻击。**
+
+反例：
+
+```java
+SSLSocketFactory sf = new MySSLSocketFactory(trustStore);
+
+sf.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+```
+
+`ALLOW_ALL_HOSTNAME_VERIFIER`关闭host验证，允许和所有的host建立SSL 通信，`BROWSER_COMPATIBLE_HOSTNAME_VERIFIER` 和浏览器兼容的验证策略，即通配符能够匹配所有子域名，`STRICT_HOSTNAME_VERIFIER`严格匹配模式，hostname 必须匹配第一个CN 或者任何一个subject-alts，以上例子使用了`ALLOW_ALL_HOSTNAME_VERIFIER`，需要改成`STRICT_HOSTNAME_VERIFIER`。
+
+</br> 
+
+`建议`  **Android5.0以后安全性要求较高的应用应该使用`window.setFlag(LayoutParam.FLAG_SECURE)` 禁止录屏。**
+
+</br> 
+
+`建议`  **zip中不建议允许../../file 这样的路径，可能被篡改目录结构，造成攻击。**	
+
+说明：
+
+当zip压缩包中允许存在"../"的字符串，攻击者可以利用多个"../"在解压时改变zip文件存放的位置，当文件已经存在是就会进行覆盖，如果覆盖掉的文件是so、dex 、odex 文件，就有可能造成严重的安全问题。
+
+正例：
+
+对路径进行判断，存在".."时抛出异常。
+
+```java
+//对重要的 Zip 压缩包文件进行数字签名校验，校验通过才进行解压
+
+String entryName = entry.getName();
+
+if (entryName.contains("..")){
+
+		throw new Exception("unsecurity zipfile!");
+
+}
+```
+
+反例：
+
+```java
+BufferedOutputStream dest = null;
+
+try {
+
+    ZipInputStream zis = new ZipInputStream(new BufferedInputStream(new FileInputStream
+("/Users/yunmogong/Documents/test/test.zip")));
+
+    ZipEntry entry;
+
+    while ((entry = zis.getNextEntry()) != null){
+
+        int count;
+
+        byte data[] = new byte[BUFFER];
+
+        String entryName = entry.getName();
+
+        FileOutputStream fos = new FileOutputStream(entryName);
+
+        //System.out.println("Extracting:" + entry);
+
+        dest = new BufferedOutputStream(fos, BUFFER);
+
+        while ((count=zis.read(data,0,BUFFER)) != -1){
+
+      		  dest.write(data, 0, count);
+
+        }
+
+        dest.flush();
+
+    }
+
+} catch (IOException e) {
+
+		e.printStackTrace();
+
+} finally {
+
+    try {
+
+   		 dest.close();
+
+    } catch (IOException e) {
+
+   		 e.printStackTrace();
+
+    }
+
+}
+```
+
+如上代码，没有对文件的路径名进行判断直接进行解压，如果路径中包含../字符串，就会造成目录的遍历问题，一旦遭到中间人攻击替换下载的文件，将会导致某些恶意文件被执行。
+
+</br> 
+
+**`强制`开放的`activity`、`service`、`receiver` 等需要对传入的Intent 做合法性校验。**
+
+</br> 
+
+`建议`  **加密算法：使用不安全的Hash算法(MD5/SHA-1)加密信息，存在被破解的风险，建议使用SHA-256 等安全性更高的Hash 算法**。
+
+</br> 
+
+`建议`  **Android `WebView` 组件加载网页发生证书认证错误时,采用默认的处理方法`handler.cancel()`，停止加载问题页面。**
+
+说明：
+
+Android `WebView` 组件加载网页发生证书认证错误时，会调用`WebViewClient` 类的`onReceivedSslError` 方法，如果该方法实现调用了`handler.proceed（）`来忽略该证书错误，则会受到中间人攻击的威胁，可能导致隐私泄露。
+
+反例：
+
+```java
+mWebView.getSettings().setJavaScriptEnabled(true);
+
+mWebView.addJavascriptInterface(new JsBridge(mContext), JS_OBJECT);
+
+mWebView.loadUrl("http://www.example.org/tests/addjsif/");
+
+mWebView.setWebViewClient(new WebViewClient() {
+
+@Override
+public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+
+		handler.proceed(); //	忽略 SSL 证书错误
+
+}
+
+});
+```
+
+</br> 
+
+`建议`  **直接传递命令字或者间接处理有敏感信息或操作时，避免使用`socket` 实现，使用能够控制权限校验身份的方式通讯。**
+
+
+
+</br> 
+
+##### 其他
+
+**`强制 ` 不要通过Message对象 传递大的对象，会导致内存问题。**
+
+</br> 
+
+**`强制`  不能使用`System.out.println` 打印log。**
+
+正例：
+
+```java
+Log.d(TAG, "Some Android Debug info ...");
+```
+
+反例：
+
+```java
+System.out.println("System out println ...");
+```
+
+</br> 
+
+**`强制`  Log 的tag 不能是" "、null，必须是标识意义的 String。**
+
+说明：
+
+日志的tag 是空字符串没有任何意义，也不利于过滤日志。
+
+正例：
+
+```java
+private static String TAG = "LoginActivity";
+
+Log.e(TAG, "Login failed!");
+```
+
+反例：
+
+```java
+Log.e("", "Login failed!");
+```
 
