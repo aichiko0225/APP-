@@ -169,7 +169,7 @@ Android系统当中中文字体：Noto（思源黑体字体），也是目前安
 
   ​	无论是颜色，字体，间距，都应该先定下最常用的参数，再往次级，次次级依次展开，会使规范根基更稳，条理清晰。
 
-​			<img src="/Users/yubiao/Documents/APP设计及开发规范/APP-/principle_1.png" alt="principle_1" style="zoom:50%;" />
+​			<img src="./principle_1.png" alt="principle_1" style="zoom:50%;" />
 
 
 
@@ -177,7 +177,7 @@ Android系统当中中文字体：Noto（思源黑体字体），也是目前安
 
 ​		    当两个参数肉眼难以区分，在同一层级去做区分是没必要的。同时会导致延伸时混肴，增加工作量。力求既统一又快速。
 
-​			<img src="/Users/yubiao/Documents/APP设计及开发规范/APP-/principle_2.png" alt="principle_2" style="zoom:50%;" />
+​			<img src="./principle_2.png" alt="principle_2" style="zoom:50%;" />
 
 
 
