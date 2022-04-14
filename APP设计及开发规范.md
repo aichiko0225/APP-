@@ -3409,3 +3409,1986 @@ func execute(command: String, stdin: String) -> String {
 ### Android开发规范
 
 ----
+
+# Android开发规范
+
+## 开发环境
+
+- 集成开发环境： [Android Studio](http://www.android-studio.org/)
+- 构建编译环境： [**Gradle +**](https://services.gradle.org/distributions/)    
+
+### 顶级构建文件配置
+
+```gradle
+buildscript {
+    repositories {
+        // 配置项目编译时脚本或插件需要依赖的 MAVEN 库  google jcenter 为固定的库地址，也可 maven 后
+        // 写相应 url
+        maven {
+             google()
+        		 jcenter()
+        		 maven { url 'https://dl.bintray.com/umsdk/release' }
+        }
+        ...
+    }
+    dependencies {
+    		//此处为对应的使用的 gradle 的版本
+        classpath 'com.android.tools.build:gradle:3.0.1'
+        ...
+    }
+}
+allprojects {
+    repositories {
+        // 所有模块级需要依赖的 MAVEN 库
+        maven { 
+        		url 'https://dl.bintray.com/umsdk/release' 
+        }
+        ...
+    }
+}
+```
+
+关于 MAVEN库配置，除去以上等根据内部库地址可更改添加。
+
+### 模块级构建文件配置
+
+> SDK 版本（API 级别）即编辑使用的 android sdk 的版本，不同版本有不同的特性。
+
+```gradle
+android {
+    ...
+    // 编译时所依赖的 SDK 版本
+    compileSdkVersion 27
+    // 构建工具版本号，根据项目所依赖 support 包的版本所变动
+    buildToolsVersion ["27.0.0+"]
+    defaultConfig {
+        ...
+        // 最小适配 SDK 版本为 19 以上
+        minSdkVersion [19+]
+        // 目标适配 SDK 版本在 23 以上
+        targetSdkVersion [23+]
+    }
+}
+dependencies {
+    compile 'com.android.support:appcompat-v7:[27.0.0+]'
+}
+```
+
+**为了避免引起兼容性问题，项目构建与开发时请遵循规定的适配版本，以及做好相应的系统适配。**
+
+## 项目包名规范
+
+**以域名反写形式加项目名称**
+
+```
+<顶级域名>.<公司名称>.<项目名>
+```
+
+## 命名规范
+
+**请使用英文或其英文缩写形式，不能使用中文简拼。保证变量命名语义化**
+
+### Package 规范
+
+项目包结构主要**以业务模块划分**
+
+```
+<.业务模块>[.功能组件模块.]
+```
+
+**例：**
+
+**登录模块**对应的包名为：`.login.`
+
+**订单模块**对应的包名为：`.order.`
+
+| 命名规范     | 功能组件                       |
+| :----------- | :----------------------------- |
+| `.activity.` | 对应业务层下的所有的`Activity` |
+| `.fragment.` | 对应业务层下的所有的`Fragment` |
+| `.adapter.`  | 对应业务层下的所有的`Adapter`  |
+| `.service.`  | 对应业务层下的所有的接口服务   |
+| `.model.`    | 对应业务层下的所有的数据提供   |
+
+### Class 类名规范
+
+类名都以`UpperCamelCase`风格编写。
+
+类名通常是名词或名词短语，接口名称有时可能是形容词或形容词短语。现在还没有特定的规则或行之有效的约定来命名注解类型。
+
+名词，采用大驼峰命名法，尽量避免缩写，除非该缩写是众所周知的， 比如`HTML`, `URL`，如果类名称中包含单词缩写，则单词缩写的每个字母均应大写。
+
+| 类                  | 描述                                                         | 例如                                                         |
+| :------------------ | :----------------------------------------------------------- | :----------------------------------------------------------- |
+| Activity 类         | Activity为后缀标识                                           | 欢迎页面类WelcomeActivity                                    |
+| Adapter类           | Adapter 为后缀标识                                           | 新闻详情适配器 NewDetailAdapter                              |
+| 解析类              | Parser为后缀标识                                             | 首页解析类HomePosterParser                                   |
+| 工具方法类          | Utils或Manager为后缀标识（与系统或第三方的Utils区分）或功能+Utils | 线程池管理类：ThreadPoolManager日志工具类：LogUtils（Logger也可）打印工具类：PrinterUtils |
+| 数据库类            | 以DBHelper后缀标识                                           | 新闻数据库：NewDBHelper                                      |
+| Service类           | 以Service为后缀标识                                          | 时间服务TimeService                                          |
+| BroadcastReceiver类 | 以Receiver为后缀标识                                         | 推送接收JPushReceiver                                        |
+| ContentProvider类   | 以Provider为后缀标识                                         | ShareProvider                                                |
+| 自定义的共享基础类  | 以Base开头                                                   | BaseActivity,BaseFragment                                    |
+
+测试类的命名以它要测试的类的名称开始，以Test结束。例如：`HashTest`或`HashIntegrationTest`。
+
+接口（interface）：命名规则与类一样采用大驼峰命名法，多以able或ible结尾，如 `interface Runnable`、`interface Accessible`。
+
+> 注意：如果项目采用MVP，所有Model、View、Presenter的接口都以I为前缀，不加后缀，其他的接口采用上述命名规则。
+
+### 方法名
+
+方法名都以`lowerCamelCase`风格编写。
+
+方法名通常是动词或动词短语。
+
+| 方法                   | 说明                                                      |
+| :--------------------- | --------------------------------------------------------- |
+| initXX()               | 初始化相关方法,使用init为前缀标识，如初始化布局initView() |
+| isXX() checkXX()       | 方法返回值为boolean型的请使用is或check为前缀标识          |
+| getXX()                | 返回某个值的方法，使用get为前缀标识                       |
+| setXX()                | 设置某个属性值                                            |
+| handleXX()/processXX() | 对数据进行处理的方法                                      |
+| displayXX()/showXX()   | 弹出提示框和提示信息，使用display/show为前缀标识          |
+| updateXX()             | 更新数据                                                  |
+| saveXX()               | 保存数据                                                  |
+| resetXX()              | 重置数据                                                  |
+| clearXX()              | 清除数据                                                  |
+| removeXX()             | 移除数据或者视图等，如removeView();                       |
+| drawXX()               | 绘制数据或效果相关的，使用draw前缀标识                    |
+
+### 常量名
+
+常量名命名模式为`CONSTANT_CASE`，全部字母大写，用下划线分隔单词。那，到底什么算是一个常量？
+
+每个常量都是一个静态`final`字段，但不是所有静态`final`字段都是常量。在决定一个字段是否是一个常量时，考虑它是否真的感觉像是一个常量。例如，如果任何一个该实例的观测状态是可变的，则它几乎肯定不会是一个常量。只是永远不打算改变对象一般是不够的，它要真的一直不变才能将它示为常量。
+
+```java
+// Constants
+static final int NUMBER = 5;
+static final ImmutableListNAMES = ImmutableList.of("Ed", "Ann");
+static final Joiner COMMA_JOINER = Joiner.on(','); // because Joiner is immutable
+static final SomeMutableType[] EMPTY_ARRAY = {};
+enum SomeEnum { ENUM_CONSTANT }
+
+// Not constants
+static String nonFinal = "non-final";
+final String nonStatic = "non-static";
+static final SetmutableCollection = new HashSet();
+static final ImmutableSetmutableElements = ImmutableSet.of(mutable);
+static final Logger logger = Logger.getLogger(MyClass.getName());
+static final String[] nonEmptyArray = {"these", "can", "change"};
+```
+
+**Type：类型**
+
+考虑到Android中使用很多UI控件，为避免控件和普通成员变量混淆以及更好达意，所有用来表示控件的成员变量统一加上控件缩写作为后缀（文末附有缩写表）。
+
+对于普通变量一般不添加类型后缀，如果统一添加类型后缀，请参考文末的缩写表。
+
+用统一的量词通过在结尾处放置一个量词，就可创建更加统一的变量，它们更容易理解，也更容易搜索。
+
+> 注意：如果项目中使用`ButterKnife`，则不添加m前缀，以`lowerCamelCase`风格命名。
+
+例如，请使用`mCustomerStrFirst`和`mCustomerStrLast`，而不要使用`mFirstCustomerStr`和`mLastCustomerStr`。
+
+| 量词列表 | 量词后缀说明           |
+| -------- | ---------------------- |
+| First    | 一组变量中的第一个     |
+| Last     | 一组变量中的最后一个   |
+| Next     | 一组变量中的下一个变量 |
+| Prev     | 一组变量中的上一个     |
+| Cur      | 一组变量中的当前变量   |
+
+说明：
+
+集合添加如下后缀：List、Map、Set 数组添加如下后缀：Arr
+
+> 注意：所有的VO（值对象）统一采用标准的lowerCamelCase风格编写，所有的DTO（数据传输对象）就按照接口文档中定义的字段名编写。
+
+#### 参数名
+
+参数名以`lowerCamelCase`风格编写。 参数应该避免用单个字符命名。
+
+#### 局部变量名
+
+局部变量名以`lowerCamelCase`风格编写，比起其它类型的名称，局部变量名可以有更为宽松的缩写。
+
+虽然缩写更宽松，但还是要避免用单字符进行命名，除了临时变量和循环变量。
+
+即使局部变量是final和不可改变的，也不应该把它示为常量，自然也不能用常量的规则去命名它。
+
+#### 临时变量
+
+临时变量通常被取名为`i`、`j`、`k`、`m`和`n`，它们一般用于整型；`c`、`d`、`e`，它们一般用于字符型。 如：`for (int i = 0; i < len ; i++)`。
+
+#### 类型变量名
+
+类型变量可用以下两种风格之一进行命名：
+
+1. 单个的大写字母，后面可以跟一个数字(如：`E`, `T`, `X`, `T2`)。
+2. 以类命名方式(参考[3.2 类名](http://icome-book.icomecloud.com/docs/android/rule/android/#32-%E7%B1%BB%E5%90%8D))，后面加个大写的`T`(如：`RequestT`, `FooBarT`)。
+
+
+
+### Resources 资源命名
+
+#### 控件 ID
+
+```
+<控件缩写>_<作用范围|功能模块>[_动作]
+```
+
+**例：**
+
+**删除订单按钮**对应的控件ID为：`btn_oder_del`
+
+| 控件           | 缩写  | 控件             | 缩写   |
+| :------------- | :---- | :--------------- | :----- |
+| `TextView`     | `tv`  | `EditText`       | `edt`  |
+| `Button`       | `btn` | `ImageButton`    | `ibtn` |
+| `ImageView`    | `img` | `ListView`       | `list` |
+| `RadioGroup`   | `rg`  | `RadioButton`    | `rb`   |
+| `CheckBox`     | `cb`  | `ScrollView`     | `sv`   |
+| `LinearLayout` | `ll`  | `RelativeLayout` | `rl`   |
+
+**注:其它控件的缩写推荐使用小写字母并用下划线进行分割**
+
+例如：
+
+ ProgressBar 对应的缩写为 progress_bar
+
+ DatePicker 对应的缩写为 date_picker
+
+#### Layout 资源
+
+```
+<模块名>_<组件类型>_[作用范围_]<功能>
+```
+
+**注：范围可选，只在有明确定义的范围内才需要加上。**
+
+| 命名格式                      | 作用资源类型                 |
+| :---------------------------- | :--------------------------- |
+| `activity_[作用范围_]<功能>`  | `Activity`布局               |
+| `page_[作用范围_]<功能>`      | `Fragment`布局               |
+| `item_list_[作用范围_]<功能>` | `ListView`下的**Item项**布局 |
+| `item_grid_[作用范围_]<功能>` | `GridView`下的**Item项**布局 |
+| `dialog_[作用范围_]<功能>`    | `Dialog`布局                 |
+| `widget_[作用范围_]<功能>`    | 小部件或者自定义控件布局     |
+
+#### Drawable 资源
+
+```
+<模块名>_<前缀|业务功能描述>_<控件|范围>[_后缀]
+```
+
+**注：控件、范围、后缀可选，但控件和范围至少要有一个。**
+
+| 前缀       | 作用资源   |
+| :--------- | :--------- |
+| `ic或icon` | 图标类     |
+| `bg`       | 背景类     |
+| `div`      | 分割类     |
+| `def`      | 默认类     |
+| `selector` | 状态选择类 |
+| `shape`    | 形状类     |
+
+| 后缀       | 作用       |
+| :--------- | :--------- |
+| `normal`   | 默认状态   |
+| `pressed`  | 按下状态   |
+| `selected` | 选中状态   |
+| `disable`  | 不可用状态 |
+
+#### 动画文件命名
+
+```
+<模块名>_<动画效果|逻辑名称>_<方向>_[anim]
+```
+
+**注:  anim 后缀可省略**
+
+| 命名格式                | 效果     |
+| :---------------------- | :------- |
+| `fade_in_anim`          | 淡入     |
+| `fade_out_anim`         | 淡出     |
+| `push_down_in_anim`     | 向下推入 |
+| `push_down_out_anim`    | 向下推出 |
+| `zoom_enter_anim`       | 变形进入 |
+| `shrink_to_middle_anim` | 向中缩小 |
+
+#### 颜色资源命名
+
+**color 资源使用#AARRGGBB 格式，写入 module_colors.xml 文件中**
+
+```
+<模块名>_<逻辑名称>_<颜色>
+```
+
+例如：
+
+```
+<color name="module_btn_bg_color">#33b5e5e5</color>
+```
+
+#### Dimen 资源命名
+
+**dimen 资源以小写单词+下划线方式命名，写入 module_dimens.xml 文件中**
+
+```
+<模块名>_<描述信息>
+```
+
+例如:
+
+```
+<dimen name="module_horizontal_line_height">1dp</dimen>
+```
+
+#### style 资源命名
+
+**style 资源采用小写单词+下划线方式命名，写入 module_styles.xml 文件中**
+
+```
+父 style 名称.当前 style 名称
+```
+
+例如:
+
+```
+<style name="ParentTheme.ThisActivityTheme">
+	...
+</style>
+```
+
+#### string 资源命名
+
+**string 资源文件或者文本用到字符需要全部写入 module_strings.xml 文件中**
+
+```
+<模块名>_<逻辑名称>
+```
+
+例如:
+
+```
+moudule_login_tips
+module_homepage_notice_desc
+```
+
+#### 大分辨率图片资源
+
+**大分辨率图片（单维度超过 1000）大分辨率图片建议统一放在 xxhdpi 目录下管理，否则将导致占用内存成倍数增加。**
+
+说明：
+
+ 		为了支持多种屏幕尺寸和密度，Android 为多种屏幕提供不同的资源目录进行适配。为不同屏幕密度提供不同的位图可绘制对象，可用于密度特定资源的配置限定符（在下面详述） 包括 ldpi（低）、mdpi（中）、 hdpi（高）、xhdpi（超高）、xxhdpi （超超高）和 xxxhdpi（超超超高）。
+
+例如: 
+
+​		高密度屏幕的位图应使用 drawable-hdpi/。
+
+​		根据当前的设备屏幕尺寸和密度，将会寻找最匹配的资源，如果将高分辨率图片放入低密度目录，将会造成低端机加载过大图片资源，又可能造成 OOM，同时也是资源浪费，没有必要在低端机使用大图。
+
+ 正例：
+
+​		 将 144*144 的应用图标 PNG 文件放在 drawable-xxhdpi 目录
+
+ 反例：
+
+​		 将 144*144 的应用图标 PNG 文件放在 drawable-mhdpi 目录
+
+
+
+## 代码规范
+
+### Android基本组件
+
+**`强制`**  **activity间的数据通信，对于数据量比较大的，避免使用 Intent + Parcelable 的方式，推荐使用 EventBus 等替代方案，以免造成 TransactionTooLargeException。**
+
+</br>
+
+`建议`  **`Activity#onSaveInstanceState()` 方法不是 `Activity` 生命周期方法，也不保证一定会被调用。它用于`Activity` 被意外销毁时保存 UI 状态的，只能用于保存临时性数据，例如 UI 控件的属性等，不能跟数据的持久化存储混为一谈。持久化存储应该在 `Activity#onPause()/onStop()`中实行。**
+
+</br>
+
+**`强制`**  **`Activity` 间通过隐式 `Intent` 的跳转，在发出 `Intent` 之前必须通过 `resolveActivity `检查，避免找不到合适的调用组件，造成 `ActivityNotFoundException` 的异常。**
+
+正例:
+
+```java
+public void viewUrl(String url, String mimeType) {
+
+					Intent intent = new Intent(Intent.ACTION_VIEW);
+
+					intent.setDataAndType(Uri.parse(url), mimeType);
+
+					if (getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ ONLY) != null) {
+
+								try { 
+									startActivity(intent);
+								} catch (ActivityNotFoundException e) { 
+											if (Config.LOGD) {
+													Log.d(LOGTAG, "activity not found for " + mimeType + " over " + Uri.parse(url). getScheme(), e);
+											} 
+								}
+						} 
+}
+```
+
+反例:
+
+```java
+Intent intent = new Intent(); intent.setAction("com.great.activity_intent.Intent_Demo1_Result3");
+```
+
+</br>
+
+`强制`  **避免在 `Service#onStartCommand()/onBind()`方法中执行耗时操作，如果确 实有需求，应改用 `IntentService` 或采用其他异步机制完成。**
+
+正例:
+
+```java
+public class MainActivity extends Activity {
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.main);
+    }
+    
+    public void startIntentService(View source) {
+        Intent intent = new Intent(this, MyIntentService.class);
+        startService(intent);
+    }
+}
+
+public class MyIntentService extends IntentService {
+    public MyIntentService() {
+   		 super("MyIntentService");
+    }
+    
+    @Override
+    protected void onHandleIntent(Intent intent) {
+        synchronized (this) {
+            try {
+            ......
+            } catch (Exception e) {
+            }
+        }
+    }
+}
+
+```
+
+</br>
+
+**`强制`**  **避免在 `BroadcastReceiver#onReceive()`中执行耗时操作，如果有耗时工作， 应该创建 `IntentService` 完成，而不应该在 `BroadcastReceiver` 内创建子线程去做。**
+
+说明:
+
+​		由于该方法是在主线程执行，如果执行耗时操作会导致 UI 不流畅。可以使用IntentService 、 创 建HandlerThread 或 者 调 用 Context#registerReceiver(BroadcastReceiver, IntentFilter, String, Handler)方法等方式，在其他 Wroker 线程执行 onReceive 方法。BroadcastReceiver#onReceive()方法耗时超过 10 秒钟，可能会被系统杀死。
+
+```java
+IntentFilter filter = new IntentFilter(); 
+
+filter.addAction(LOGIN_SUCCESS); 
+
+this.registerReceiver(mBroadcastReceiver, filter);
+
+mBroadcastReceiver = new BroadcastReceiver() {
+  
+    @Override
+    public void onReceive(Context context, Intent intent) {
+      
+        Intent userHomeIntent = new Intent(); 
+      
+        userHomeIntent.setClass(this, UseHomeActivity.class);
+      
+        this.startActivity(userHomeIntent); 
+    }
+};
+```
+
+反例:
+
+```java
+mBroadcastReceiver = new BroadcastReceiver() {
+  
+    @Override
+    public void onReceive(Context context, Intent intent) {
+      
+        MyDatabaseHelper myDB = new MyDatabaseHelper(context);
+      
+        myDB.initData();
+        // have more database operation here
+    }
+};
+```
+
+</br>
+
+**`强制`**  **避免使用隐式`Intent`广播敏感信息，信息可能被其他注册了对应`BroadcastReceiver` 的App接收。**
+
+说明：
+
+通过Context#sendBroadcast()发送的隐式广播会被所有感兴趣的receiver 接收，恶意应用注册监听该广播的	receiver 可能会获取到	Intent 中传递的敏感信息，并进行其他危险操作。
+
+如果发送的广播为使用Context#sendOrderedBroadcast()方法发送的有序广播，优先级较高的恶意	receiver 可能直接丢弃该广播，造成服务不可用，或者向广播结果塞入恶意数据。
+
+如果广播仅限于应用内，则可以使用LocalBroadcastManager#sendBroadcast()实现，避免敏感信息外泄和	Intent 拦截的风险。
+
+正例：
+
+```java
+Intent intent = new Intent("my-sensitive-event");
+
+intent.putExtra("event", "this is a test event");
+
+LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+```
+
+反例：
+
+```java
+Intent intent = new Intent();
+
+v1.setAction("com.sample.action.server_running");
+
+v1.putExtra("local_ip", v0.h);
+
+v1.putExtra("port", v0.i);
+
+v1.putExtra("code", v0.g);
+
+v1.putExtra("connected", v0.s);
+
+v1.putExtra("pwd_predefined", v0.r);
+
+if (!TextUtils.isEmpty(v0.t)) {
+		
+  v1.putExtra("connected_usr", v0.t);
+
+}
+
+context.sendBroadcast(v1);
+```
+
+以上广播可能被其他应用的如下	receiver 接收导致敏感信息泄漏
+
+```java
+final class MyReceiver extends BroadcastReceiver {
+
+    public final void onReceive(Context context, Intent intent) {
+        
+      	if (intent != null && intent.getAction() != null) {
+        		
+            String s = intent.getAction();
+
+            if (s.equals("com.sample.action.server_running") {
+
+              String ip = intent.getStringExtra("local_ip");
+
+              String pwd = intent.getStringExtra("code");
+
+              String port = intent.getIntExtra("port", 8888);
+
+              boolean status = intent.getBooleanExtra("connected", false);
+
+            }
+        }
+    }
+}
+```
+
+</br>
+
+`建议`  **添 加 `Fragment` 时，确 保 `FragmentTransaction#commit()` 在 `Activity#onPostResume() `或者`FragmentActivity#onResumeFragments()` 内调用。**
+
+**不要随意使用`FragmentTransaction#commitAllowingStateLoss()` 来代替，任何`commitAllowingStateLoss()`的使用必须经过code review，确保无负面影响。**
+
+说明:
+
+Activity可能因为各种原因被销毁，Android支持页面被销毁前通过Activity#onSaveInstanceState() 保存自己的状 态 。
+
+但如果FragmentTransaction.commit()发生在Activity 状态保存之后，就会导致 Activity 重建、恢复状态时无法还原页面状态，从而可能出错。为了避免给用户造成不好的体 验，系统会抛出IllegalStateExceptionStateLoss 异常。
+
+推荐的做法是在 Activity 的onPostResume() 或 onResumeFragments() ( 对 FragmentActivity ) 里 执 行 FragmentTransaction.commit()，如有必要也可在 onCreate()里执行。
+
+不要随意改用FragmentTransaction.commitAllowingStateLoss()或者直接使用 try-catch 避免crash，这不是问题的根本解决之道，当且仅当你确认 Activity 重建、恢复状态时，本次 commit 丢失不会造成影响时才可这么做。
+
+正例：
+
+```java
+public class MainActivity extends FragmentActivity {
+
+    FragmentManager fragmentManager;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+
+        super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.activity_main2);
+
+        fragmentManager = getSupportFragmentManager();
+
+        FragmentTransaction ft = fragmentManager.beginTransaction();
+
+        MyFragment fragment = new MyFragment();
+
+        ft.replace(R.id.fragment_container, fragment);
+
+        ft.commit();
+
+    }
+}
+```
+
+反例：
+
+```java
+public class MainActivity extends FragmentActivity {
+
+    FragmentManager fragmentManager;
+
+   @Override
+	 public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState)
+{
+
+      super.onSaveInstanceState(outState, outPersistentState);
+
+      fragmentManager = getSupportFragmentManager();
+
+      FragmentTransaction ft = fragmentManager.beginTransaction();
+
+      MyFragment fragment = new MyFragment();
+
+      ft.replace(R.id.fragment_container, fragment);
+
+      ft.commit();
+
+    }
+
+}
+```
+
+</br>
+
+`建议`  **不要在`Activity#onDestroy()` 内执行释放资源的工作，例如一些工作线程的销毁和停止，原因是因为	`onDestroy()` 执行的时机可能较晚。可根据实际需要，在`Activity#onPause()/onStop()`中结合`isFinishing()`的判断来执行。**
+
+</br>
+
+`建议`  **总是使用显式`Intent`启动或者绑定`Service`，且不要为服务声明`Intent Filter`，保证应用的安全性。如果确实需要使用隐式调用，则可为`Service`提供`Intent Filter`并从`Intent`中排除相应的组件名称，但必须搭配使用`Intent#setPackage()`方法设置`Intent`的指定包名，这样可以充分消除目标服务的不确定性。**
+
+</br>
+
+`建议`  **`Service`需要以多线程来并发处理多个启动请求，建议使用`IntentService`，可避免各种复杂的设置。**
+
+说明：
+
+`Service` 组件一般运行主线程，应当避免耗时操作，如果有耗时操作应该在Worker线程执行。可以使用	`IntentService` 执行后台任务。
+
+正例：
+
+```java
+public class SingleIntentService extends IntentService {
+
+    public SingleIntentService() {
+
+   		 super("single-service thread");
+
+    }
+
+    @Override
+
+    protected void onHandleIntent(Intent intent) {
+
+        try {
+
+      		 ......
+
+        } catch (InterruptedException e) {
+
+       		 e.printStackTrace();
+
+        }
+
+    }
+
+}
+```
+
+反例：
+
+```java
+public class HelloService extends Service {
+
+    ...	
+
+    @Override
+
+    public int onStartCommand(Intent intent, int flags, int startId) {
+
+        Toast.makeText(this, "service starting", Toast.LENGTH_SHORT).show();
+
+        new Thread(new Runnable() {
+
+            @Override
+
+            public void run() {
+
+           		 //操作语句
+
+            }
+
+            }).start();
+
+        ...
+
+    }
+
+}
+```
+
+</br>
+
+`建议`  **对于只用于应用内的广播，优先使用`LocalBroadcastManager`来进行注册和发送`LocalBroadcastManager` 安全性更好，同时拥有更高的运行效率。**
+
+说明：
+
+对于使用`Context#sendBroadcast()`等方法发送全局广播的代码进行提示。如果该广播仅用于应用内，则可以使用`LocalBroadcastManager` 来避免广播泄漏以及广播被拦截等安全问题，同时相对全局广播本地广播的更高效。
+
+正例：
+
+```java
+public class MainActivity extends ActionBarActivity {
+  
+    private MyReceiver receiver;
+  
+    private IntentFilter filter;
+  
+    private Context context;
+  
+ 	  private static final String MY_BROADCAST_TAG = "com.example.localbroadcast";
+  
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+
+      super.onCreate(savedInstanceState);
+
+      setContentView(R.layout.activity_main);
+
+      receiver = new MyReceiver();
+
+      filter = new IntentFilter();
+
+      filter.addAction(MY_BROADCAST_TAG);
+
+      Button button = (Button) findViewById(R.id.button);
+
+      button.setOnClickListener(new View.OnClickListener() {
+
+        @Override
+        public void onClick(View view) {
+
+          Intent intent = new Intent();
+
+          intent.setAction(MY_BROADCAST_TAG);
+
+          LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+     	 }
+      });
+
+    }
+  
+    @Override
+    protected void onResume() {
+
+      super.onResume();
+
+      LocalBroadcastManager.getInstance(context).registerReceiver(receiver, filter);
+
+    }
+
+    @Override
+    protected void onPause() {
+
+      super.onPause();
+
+      LocalBroadcastManager.getInstance(context).unregisterReceiver(receiver);
+
+    }
+
+    class MyReceiver extends BroadcastReceiver {
+
+      @Override
+      public void onReceive(Context arg0, Intent arg1) {
+        // message received
+      }
+
+    }
+}
+```
+
+反例：
+
+```java
+//所有广播都使用全局广播
+//In activity, sending broadcast
+Intent intent = new Intent("com.example.broadcastreceiver.SOME_ACTION");
+sendBroadcast(intent);
+```
+
+</br>
+
+**`强制`**  **不要在`Android`的`Application`对象中缓存数据。基础组件之间的数据共享请使用`Intent`等机制，也可使用`SharedPreferences`等数据持久化机制。**
+
+反例：
+
+```java
+class MyApplication extends Application {
+  
+  String username;
+  
+  String getUsername() {
+  
+  		return username;
+  
+  }
+  
+  void setUsername(String username) {
+  
+ 		 this.username = username;
+  
+  }
+  
+}
+  
+class SetUsernameActivity extends Activity {
+  
+  void onCreate(Bundle savedInstanceState) {
+  
+      super.onCreate(savedInstanceState);
+
+      setContentView(R.layout.set_username);
+
+      MyApplication app = (MyApplication) getApplication();
+
+      app.setUsername("tester1");
+
+      startActivity(new Intent(this, GetUsernameActivity.class));
+  
+  }
+  
+}
+  
+class GetUsernameActivity extends Activity {
+  
+  TextView tv;
+  
+  void onCreate(Bundle savedInstanceState) {
+  
+      super.onCreate(savedInstanceState);
+
+      setContentView(R.layout.get_username);
+
+      tv = (TextView)findViewById(R.id.username);
+  
+  }
+  
+  void onResume() {
+  
+      super.onResume();
+
+      MyApplication app = (MyApplication) getApplication();
+
+      tv.setText("Welcome back ! " + app.getUsername().toUpperCase());
+  
+  }
+  
+}
+
+```
+
+</br>
+
+`建议`  **使用`Toast`时，建议定义一个全局的`Toast`对象，这样可以避免连续显示`Toast`时不能取消上一次`Toast` 消息的情况(如果你有连续弹出`Toast`的情况，避免使用`Toast.makeText()`。**
+
+</br>
+
+**`强制`**  **使用`Adapter`的时候，如果你使用了`ViewHolder`做缓存，在`getView()`的方法中无论这项`convertView`的每个子控件是否需要设置属性(比如某个`TextView`设置的文本可能为null，某个按钮的背景色为透明，某控件的颜色为透明等)，都需要为其显式设置属性(`Textview`的文本为空也需要设置`setText("")`，背景透明也需要设置)，否则在滑动的过程中，因为`adapter item` 复用的原因，会出现内容的显示错乱。**
+
+正例：
+
+```java
+@Override
+public View getView(int position, View convertView, ViewGroup parent) {
+
+    ViewHolder myViews;
+
+    if (convertView == null) {
+
+        myViews = new ViewHolder();
+
+        convertView = mInflater.inflate(R.layout.list_item, null);
+
+        myViews.mUsername = (TextView)convertView.findViewById(R.id.username);
+
+        convertView.setTag(myViews);
+
+    } else {
+
+        myViews = (ViewHolder)convertView.getTag();
+
+    }
+
+    Info p = infoList.get(position);
+
+    String dn = p.getDisplayName;
+
+    myViews.mUsername.setText(StringUtils.isEmpty(dn) ? "" : dn);
+
+    return convertView;
+
+}
+
+static class ViewHolder {
+
+ 		 private TextView mUsername;
+
+}
+```
+
+</br>
+
+**`强制`**  **`Activity` 或者`Fragment` 中动态注册`BroadCastReceiver` 时，`registerReceiver()`和`unregisterReceiver()`要成对出现。**
+
+说明：
+
+如果`registerReceiver()`和`unregisterReceiver()`不成对出现，则可能导致已经注册的`receiver` 没有在合适的时机注销，导致内存泄漏，占用内存空间，加重`SystemService`负担。部分华为的机型会对`receiver` 进行资源管控，单个应用注册过多`receiver` 会触发管控模块抛出异常，应用直接崩溃。
+
+正例：
+
+```java
+public class MainActivity extends AppCompatActivity {
+
+    private static MyReceiver myReceiver = new MyReceiver();
+
+    ...
+
+    @Override
+    protected void onResume() {
+
+      super.onResume();
+
+      IntentFilter filter = new IntentFilter("com.example.myservice");
+
+      registerReceiver(myReceiver, filter);
+
+    }
+
+    @Override
+    protected void onPause() {
+
+      super.onPause();
+
+      unregisterReceiver(myReceiver);
+
+    }
+
+    ...
+
+}
+```
+
+反例：
+
+```java
+public class MainActivity extends AppCompatActivity {
+
+    private static MyReceiver myReceiver;
+
+    @Override
+    protected void onResume() {
+
+        super.onResume();
+
+        myReceiver = new MyReceiver();
+
+        IntentFilter filter = new IntentFilter("com.example.myservice");
+
+        registerReceiver(myReceiver, filter);
+
+    }
+
+    @Override
+    protected void onDestroy() {
+
+        super.onDestroy();
+
+        unregisterReceiver(myReceiver);
+
+    }
+
+}
+```
+
+`Activity` 的生命周期不对应，可能出现多次`onResume` 造成`receiver` 注册多个，但最终只注销一个，其余	`receiver` 产生内存泄漏。
+
+</br>
+
+### UI与布局
+
+**`强制`**  **布局中不得不使用 `ViewGroup` 多重嵌套时，不要使用 `LinearLayout` 嵌套，改用`RelativeLayout`、 `ConstraintLayout`，可以有效降低嵌套数。**
+
+说明：
+
+Android 应用页面上任何一个View 都需要经过	`measure`、`layout`、`draw` 三个步骤才能被正确的渲染。从	xml layout 的顶部节点开始进行`measure`，每个子节点都需要向自己的父节点提供自己的尺寸来决定展示的位置，在此过程中可能还会重新`measure`（由此可能导致`measure` 的时间消耗为原来的	2-3 倍）。节点所处位置越深，套嵌带来的`measure` 越多，计算就会越费时。这就是为什么扁平的View 结构会性能更好。同时，页面拥上的	View 越多，`measure`、`layout`、`draw` 所花费的时间就越久。要缩短这个时间，关键是保持View 的树形结构尽量扁平，而且要移除所有不需要渲染的View。理想情况下，总共的	`measure`、`layout`、`draw` 时间应该被很好的控制在	16ms以内，以保证滑动屏幕时UI 的流畅。要找到那些多余的View（增加渲染延迟的view），可以用Android Studio Monitor里的Hierarachy Viewer 工具，可视化的查看所有的view。
+
+</br>
+
+`建议 ` 在`Activity` 中显示对话框或弹出浮层时，尽量使用`DialogFragment`，而非`Dialog`/`AlertDialog`，这样便于随`Activity` 生命周期管理对话框/弹出浮层的生命周期。
+
+正例：
+
+```java
+public void showPromptDialog(String text){
+    DialogFragment promptDialog = new DialogFragment() {
+    
+      @Override
+    	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
+    savedInstanceState) {
+    
+          getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+          View view = inflater.inflate(R.layout.fragment_prompt, container);
+
+          return view;
+    
+      }
+    
+    };
+		
+  promptDialog.show(getFragmentManager(), text);
+}
+```
+
+</br>
+
+`建议`  **源文件统一采用`UTF-8` 的形式进行编码。**
+
+</br>
+
+**`强制`**  **禁止在非ui 线程进行view 相关操作。**
+
+</br>
+
+`建议`  文本大小使用单位dp，`view` 大小使用单位dp。对于`Textview`，如果在文字大小确定的情况下推荐使用	`wrap_content` 布局避免出现文字显示不全的适配问题。
+
+</br>
+
+**`强制`**  **禁止在设计布局时多次设置`子view `和`父view` 中为同样的背景造成页面过度绘制，推荐将不需要显示的布局进行及时隐藏。**
+
+反例：
+
+```
+@Override
+
+protected void onDraw(Canvas canvas) {
+
+    super.onDraw(canvas);
+
+    int width = getWidth();
+
+    int height = getHeight();
+
+    mPaint.setColor(Color.GRAY);
+
+    canvas.drawRect(0, 0, width, height, mPaint);
+
+    mPaint.setColor(Color.CYAN);
+
+    canvas.drawRect(0, height/4, width, height, mPaint);
+
+    mPaint.setColor(Color.DKGRAY);
+
+    canvas.drawRect(0, height/3, width, height, mPaint);
+
+    mPaint.setColor(Color.LTGRAY);
+
+    canvas.drawRect(0, height/2, width, height, mPaint);
+
+}
+```
+
+</br>
+
+`建议`  **灵活使用布局，推荐`Merge`、`ViewStub`来优化布局，尽可能多的减少UI布局层级，推荐使用	`FrameLayout`，`LinearLayout`、`RelativeLayout` 次之。**
+
+</br>
+
+`建议`  **在需要时刻刷新某一区域的组件时，建议通过以下方式避免引发全局layout刷新:**
+
+  		1) 设置固定的`view` 大小的高宽，如倒计时组件等。
+  		2) 调用`view` 的`layout` 方式修改位置，如弹幕组件等。
+  		3) 通过修改`canvas` 位置并且调用`invalidate(int l, int t, int r, int b)`等方式限定刷新区域。
+  		4) 通过设置一个是否允许`requestLayout` 的变量，然后重写控件的`requestlayout`、`onSizeChanged`方法，	判断控件的大小没有改变的情况下，当进入`requestLayout` 的时候，直接返回而不调用`super（）` 的	`requestLayout` 方法。
+
+</br>
+
+`建议`  不能在`Activity` 没有完全显示时显示`PopupWindow` 和`Dialog`。
+
+</br>
+
+`建议`  **尽量不要使用`AnimationDrawable`，它在初始化的时候就将所有图片加载到内存中，特别占内存，并且还不能释放，释放之后下次进入再次加载时会报错。**
+
+说明：
+
+Android 的帧动画可以使用`AnimationDrawable` 实现，但是如果你的帧动画中如果包含过多帧图片，一次性加载所有帧图片所导致的内存消耗会使低端机发生**OOM异常**。帧动画所使用的图片要注意降低内存消耗，当图片比较大时，容易出现**OOM**。
+
+正例：
+
+图片数量较少的`AnimationDrawable` 还是可以接受的。
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android" android:oneshot
+="true">
+<item android:duration="500" android:drawable="@drawable/ic_heart_100"/>
+<item android:duration="500" android:drawable="@drawable/ic_heart_75"/>
+<item android:duration="500" android:drawable="@drawable/ic_heart_50"/>
+<item android:duration="500" android:drawable="@drawable/ic_heart_25"/>
+<item android:duration="500" android:drawable="@drawable/ic_heart_0"/>
+</animation-list>
+```
+
+反例：
+
+```xml
+<?xml version="1.0" encoding="utf-8"?><animation-list xmlns:android="http://schemas.android.com/apk/res/android" android:oneshot="true">
+  <item android:duration="500" android:drawable="@drawable/ic_heart_100"/>
+  <item android:duration="500" android:drawable="@drawable/ic_heart_99"/>
+  <item android:duration="500" android:drawable="@drawable/ic_heart_98"/>
+  <item android:duration="500" android:drawable="@drawable/ic_heart_97"/>
+  <item android:duration="500" android:drawable="@drawable/ic_heart_96"/>
+  ...
+  <item android:duration="500" android:drawable="@drawable/ic_heart_5"/>
+  <item android:duration="500" android:drawable="@drawable/ic_heart_4"/>
+  <item android:duration="500" android:drawable="@drawable/ic_heart_3"/>
+  <item android:duration="500" android:drawable="@drawable/ic_heart_2"/>
+  <item android:duration="500" android:drawable="@drawable/ic_heart_1"/>
+  <item android:duration="500" android:drawable="@drawable/ic_heart_0"/>
+</animation-list>
+```
+
+</br>
+
+**`强制`**  **不能使用`ScrollView` 包裹`ListView`、`GridView`、`ExpandableListVIew`，因为这样会把ListView 的所有Item 都加载到内存中，要消耗巨大的内存和cpu 去绘制图面。**
+
+除非有特殊需求，且处理好相应的内存管理及释放，不然不可如此使用。
+
+说明：
+
+`ScrollView` 中嵌套`List` 或`RecyclerView` 的做法官方明确禁止。除了开发过程中遇到的各种视觉和交互问题，这种做法对性能也有较大损耗。`ListView` 等UI 组件自身有垂直滚动功能，也没有必要在嵌套一层`ScrollView`。目前为了较好的UI 体验，更贴近`Material Design` 的设计，推荐使用	`NestedScrollView`。
+
+正例：
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout>
+		<android.support.v4.widget.NestedScrollView>
+				<LinearLayout>
+						<ImageView/>
+						...
+						<android.support.v7.widget.RecyclerView/>
+				</LinearLayout>
+		</android.support.v4.widget.NestedScrollView>
+  </LinearLayout>
+```
+
+反例：
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView>
+    <LinearLayout>
+        <TextView/>
+        ...
+        <ListView/>
+        <TextView />
+    </LinearLayout>
+</ScrollView>
+```
+
+</br>
+
+### 进程、线程与消息通信
+
+**`强制 `** **不要通过`Intent` 在`Android` 基础组件之间传递大数据（binder transaction缓存为1MB），可能导致OOM。**
+
+</br>
+
+**`强制 `**   **在`Application` 的业务初始化代码加入进程判断，确保只在自己需要的进程初始化。特别是后台进程减少不必要的业务初始化。**
+
+正例：
+
+```java
+public class MyApplication extends Application {
+    @Override
+    public void onCreate() {
+   
+   		//在所有进程中初始化
+   		....
+   	  
+   	  //仅在主进程中初始化
+      if (mainProcess) {
+     		 ...
+      }
+    
+      //仅在后台进程中初始化
+      if (bgProcess) {
+         ...
+      }
+      
+    }
+}
+```
+
+</br>
+
+**`强制`**  **新建线程时，必须通过线程池提供（`AsyncTask` 或者	`ThreadPoolExecutor`或者其他形式自定义的线程池），不允许在应用中自行显式创建线程。**
+
+说明：
+
+使用线程池的好处是减少在创建和销毁线程上所花的时间以及系统资源的开销，解决资源不足的问题。如果不使用线程池，有可能造成系统创建大量同类线程而导致消耗完内存或者**“过度切换”**的问题。另外创建匿名线程不便于后续的资源使用分析，对性能分析等会造成困扰。
+
+正例：
+
+```java
+int NUMBER_OF_CORES = Runtime.getRuntime().availableProcessors();
+
+int KEEP_ALIVE_TIME = 1;
+
+TimeUnit KEEP_ALIVE_TIME_UNIT = TimeUnit.SECONDS;
+
+BlockingQueue<Runnable> taskQueue = new LinkedBlockingQueue<Runnable>();
+
+ExecutorService executorService = new ThreadPoolExecutor(NUMBER_OF_CORES,
+
+NUMBER_OF_CORES*2, KEEP_ALIVE_TIME, KEEP_ALIVE_TIME_UNIT, taskQueue,
+
+new BackgroundThreadFactory(), new DefaultRejectedExecutionHandler());
+
+//执行任务
+
+executorService.execute(new Runnnable() {
+
+		...
+
+});
+```
+
+反例：
+
+```java
+new Thread(new Runnable() {
+
+@Override
+
+public void run() {
+
+    //操作语句
+
+    ...
+
+}
+
+}).start();
+```
+
+</br>
+
+**`强制`**  **线程池不允许使用`Executors` 去创建，而是通过`ThreadPoolExecutor` 的方式，这样的处理方式让写的同学更加明确线程池的运行规则，规避资源耗尽的风险。**
+
+说明：
+
+Executors 返回的线程池对象的弊端如下：
+
+1. `FixedThreadPool` 和`SingleThreadPool`：允许的请求队列长度为`Integer.MAX_VALUE`，可能会堆积大量的请求，从而导致**OOM**。
+
+2. `CachedThreadPool` 和`ScheduledThreadPool` ：允许的创建线程数量为`Integer.MAX_VALUE`，可能会创建大量的线程，从而导致**OOM**。
+
+正例：
+
+```java
+int NUMBER_OF_CORES = Runtime.getRuntime().availableProcessors();
+
+int KEEP_ALIVE_TIME = 1;
+
+TimeUnit KEEP_ALIVE_TIME_UNIT = TimeUnit.SECONDS;
+
+BlockingQueue<Runnable> taskQueue = new LinkedBlockingQueue<Runnable>();
+
+ExecutorService executorService = new ThreadPoolExecutor(NUMBER_OF_CORES,
+
+NUMBER_OF_CORES*2, KEEP_ALIVE_TIME, KEEP_ALIVE_TIME_UNIT,
+
+taskQueue, new BackgroundThreadFactory(), new DefaultRejectedExecutionHandler());
+```
+
+反例：
+
+```java
+ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
+```
+
+</br>
+
+**`强制`**  **子线程中不能更新界面，更新界面必须在主线程中进行，网络操作不能在主线程中调用。**
+
+</br>
+
+**`强制`  不要在非UI 线程中初始化`ViewStub`，否则会返回null。**
+
+</br>
+
+`建议`  **尽量减少不同APP 之间的进程间通信及拉起行为，拉起导致占用系统资源，影响用户体验。**
+
+</br>
+
+`建议`  **新建线程时，定义能识别自己业务的线程名称，便于性能优化和问题排查。**
+
+正例：
+
+```java
+public class MyThread extends Thread {
+  
+		public MyThread(){
+      
+      	super.setName("ThreadName");
+        ...
+          
+		}
+}
+```
+
+</br>
+
+`建议`  **`ThreadPoolExecutor`设置线程存活时间(setKeepAliveTime)，确保空闲时线程能被释放。**
+
+</br>
+
+`建议`  **禁止在多进程之间用`SharedPreferences`共享数据，虽然可以(MODE_MULTI_PROCESS)，但官方已不推荐。**
+
+</br>
+
+`建议`  **谨慎使用Android 的多进程，多进程虽然能够降低主进程的内存压力，但会遇到如下问题：**
+
+  		1. 不能实现完全退出所有`Activity` 的功能。
+  		2. 首次进入新启动进程的页面时会有延时的现象（有可能黑屏、白屏几秒，是白屏还是黑屏和新`Activity` 的主题有关）。
+
+3. 应用内多进程时，`Application` 实例化多次，需要考虑各个模块是否都需要在所有进程中初始化。
+
+4)	多进程间通过`SharedPreferences` 共享数据时不稳定。
+
+</br>
+
+**`强制`  当使用外部存储时，必须检查外部存储的可用性。**
+
+正例：
+
+```java
+//读/写检查
+public boolean isExternalStorageWritable() {
+
+    String state = Environment.getExternalStorageState();
+
+    if (Environment.MEDIA_MOUNTED.equals(state)) {
+
+   		 return true;
+
+    }
+
+    return false;
+
+}
+
+//只读检查
+public boolean isExternalStorageReadable() {
+
+    String state = Environment.getExternalStorageState();
+
+    if (Environment.MEDIA_MOUNTED.equals(state) || Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
+
+        return true;
+
+    }
+
+    return false;
+
+}
+
+
+```
+
+</br>
+
+**`强制`  应用间共享文件时，不要通过放宽文件系统权限的方式去实现，而应使用`FileProvider`。**
+
+正例：
+
+```xml
+<!-- AndroidManifest.xml -->
+<manifest>
+    ...
+    <application>
+    		...
+        <provider
+          android:name="android.support.v4.content.FileProvider"
+          android:authorities="com.example.fileprovider"
+          android:exported="false"
+          android:grantUriPermissions="true">
+              <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
+        ...
+    </application>
+</manifest>
+
+<!-- res/xml/provider_paths.xml -->
+<paths>
+		<files-path path="album/" name="myimages" />
+</paths>
+
+```
+
+</br>
+
+```java
+void getAlbumImage(String imagePath) {
+    
+    File image = new File(imagePath);
+
+    Intent getAlbumImageIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+    Uri imageUri = FileProvider.getUriForFile(this,"com.example.provider",image);
+
+    getAlbumImageIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+
+    startActivityForResult(takePhotoIntent, REQUEST_GET_ALBUMIMAGE);
+
+}
+```
+
+反例：
+
+```java
+void getAlbumImage(String imagePath) {
+    
+    File image = new File(imagePath);
+
+    Intent getAlbumImageIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+    //不要使用 file://的 URI 分享文件给别的应用，包括但不限于 Intent
+    getAlbumImageIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(image));
+
+    startActivityForResult(takePhotoIntent, REQUEST_GET_ALBUMIMAGE);
+
+}
+```
+
+</br>
+
+`建议`  **`SharedPreference` 中只能存储简单数据类型（int、boolean、String 等），复杂数据类型建议使用文件、数据库等其他方式存储。**
+
+正例：
+
+```java
+public void updateSettings() {
+
+    SharedPreferences mySharedPreferences = getSharedPreferences("settings",
+
+    Activity.MODE_PRIVATE);
+
+    SharedPreferences.Editor editor = mySharedPreferences.edit();
+
+    editor.putString("id", "foo");
+
+    editor.putString("nick", "bar");
+
+    //不要把复杂数据类型转成 String 存储
+
+    editor.apply();
+
+}
+```
+
+</br>
+
+`建议`  `SharedPreference` 提交数据时，尽量使用`Editor#apply()` ，而非`Editor#commit()` 。一般来讲，仅当需要确定提交结果，并据此有后续操作时，才使用`Editor#commit() `。
+
+说明：
+
+`SharedPreference` 相关修改使用`apply` 方法进行提交会先写入内存，然后异步写入磁盘，`commit` 方法是直接写入磁盘。如果频繁操作的话`apply` 的性能会优于`commit`，`apply` 会将最后修改内容写入磁盘。但是如果希望立刻获取存储操作的结果，并据此做相应的其他操作，应当使用`commit`。
+
+正例：
+
+```java
+public void updateSettingsAsync() {
+
+    SharedPreferences mySharedPreferences = getSharedPreferences("settings",
+
+    Activity.MODE_PRIVATE);
+
+    SharedPreferences.Editor editor = mySharedPreferences.edit();
+
+    editor.putString("id", "foo");
+
+    editor.apply();
+
+}
+
+public void updateSettings() {
+
+    SharedPreferences mySharedPreferences = getSharedPreferences("settings",
+
+    Activity.MODE_PRIVATE);
+
+    SharedPreferences.Editor editor = mySharedPreferences.edit();
+
+    editor.putString("id", "foo");
+
+    if (!editor.commit()) {
+
+   		 Log.e(LOG_TAG, "Failed to commit setting changes");
+
+    }
+
+}
+```
+
+反例：
+
+```java
+editor.putLong("key_name", "long value");
+
+editor.commit();
+```
+
+</br>
+
+**`强制`**  **数据库`Cursor` 必须确保使用完后关闭，以免内存泄漏。**
+
+说明：
+
+`Cursor` 是对数据库查询结果集管理的一个类，当查询的结果集较小时，消耗内存不易察觉。但是当结果集较大，长时间重复操作会导致内存消耗过大，需要开发者在操作完成后手动关闭`Cursor`。数据库`Cursor` 在创建及使用时，可能发生各种异常，无论程序是否正常结束，必须在最后确保`Cursor` 正确关闭，以避免内存泄漏。同时，如果`Cursor` 的使用还牵涉多线程场景，那么需要自行保证操作同步。
+
+正例：
+
+```java
+public void handlePhotos(SQLiteDatabase db, String userId) {
+
+    Cursor cursor;
+
+    try {
+
+        cursor = db.query(TUserPhoto, new String[] { "userId", "content" }, "userId=?", new
+
+        String[] { userId }, null, null, null);
+
+        while (cursor.moveToNext()) {
+
+        // TODO
+
+        }
+
+    } catch (Exception e) {
+
+        // TODO
+
+    } finally {
+
+        if (cursor != null) {
+
+       		 cursor.close();
+
+    		}
+
+    }
+
+}
+```
+
+反例：
+
+```java
+public void handlePhotos(SQLiteDatabase db, String userId) {
+
+    Cursor cursor = db.query(TUserPhoto, new String[] { "userId", "content" }, "userId=?", new String[] { userId }, null, null, null);
+
+    while (cursor.moveToNext()) {
+
+   		 // TODO
+
+    }
+    //	不能放任 cursor 不关闭
+    
+}
+```
+
+</br>
+
+**`强制`  多线程操作写入数据库时，需要使用事务，以免出现同步问题。**
+
+说明：
+
+Android 的通过`SQLiteOpenHelper` 获取数据库`SQLiteDatabase` 实例，Helper 中会自动缓存已经打开的	`SQLiteDatabase` 实例，单个App 中应使用`SQLiteOpenHelper`的单例模式确保数据库连接唯一。由于	SQLite 自身是数据库级锁，单个数据库操作是保证线程安全的（不能同时写入），`transaction` 时一次原子操作，因此处于事务中的操作是线程安全的。若同时打开多个数据库连接，并通过多线程写入数据库，会导致数据库异常，提示数据库已被锁住。
+
+正例：
+
+```java
+public void insertUserPhoto(SQLiteDatabase db, String userId, String content) {
+
+    ContentValues cv = new ContentValues();
+
+    cv.put("userId", userId);
+
+    cv.put("content", content);
+
+    db.beginTransaction();
+
+    try {
+
+        db.insert(TUserPhoto, null, cv);
+
+        //	其他操作
+
+   		 db.setTransactionSuccessful();
+
+    } catch (Exception e) {
+
+   		 // TODO
+
+    } finally {
+
+  		  db.endTransaction();
+
+    }
+
+}
+```
+
+反例：
+
+```java
+public void insertUserPhoto(SQLiteDatabase db, String userId, String content) {
+
+    ContentValues cv = new ContentValues();
+
+    cv.put("userId", userId);
+
+    cv.put("content", content);
+
+    db.insert(TUserPhoto, null, cv);
+
+}
+```
+
+</br>
+
+`建议`  **大数据写入数据库时，请使用事务或其他能够提高I/O 效率的机制，保证执行速度。**
+
+正例：
+
+```java
+public void insertBulk(SQLiteDatabase db, ArrayList<UserInfo> users) {
+
+    db.beginTransaction();
+
+    try {
+
+        for (int i = 0; i < users.size; i++) {
+
+            ContentValues cv = new ContentValues();
+
+            cv.put("userId", users[i].userId);
+
+            cv.put("content", users[i].content);
+
+            db.insert(TUserPhoto, null, cv);
+
+        }
+
+        //	其他操作
+
+        db.setTransactionSuccessful();
+
+    } catch (Exception e) {
+      
+    		// TODO
+      
+    } finally {
+      
+  		  db.endTransaction();
+      
+    }
+  
+}
+
+```
+
+</br>
+
+**`强制`**  **执行SQL 语句时，应使用`SQLiteDatabase#insert()`、update()、`delete()`，不要使用	`SQLiteDatabase#execSQL()`，以免SQL 注入风险。**
+
+正例：
+
+```java
+public int updateUserPhoto(SQLiteDatabase db, String userId, String content) {
+
+    ContentValues cv = new ContentValues();
+
+    cv.put("content", content);
+
+    String[] args = {String.valueOf(userId)};
+
+    return db.update(TUserPhoto, cv, "userId=?", args);
+
+}
+```
+
+反例：
+
+```java
+public void updateUserPhoto(SQLiteDatabase db, String userId, String content) {
+
+    String sqlStmt = String.format("UPDATE %s SET content=%s WHERE userId=%s",
+
+    TUserPhoto, userId, content);
+
+    //请提高安全意识，不要直接执行字符串作为 SQL 语句
+
+    db.execSQL(sqlStmt);
+
+}
+```
+
+</br>
+
+**`强制`**  **如果`ContentProvider` 管理的数据存储在SQL 数据库中，应该避免将不受信任的外部数据直接拼接在原始SQL 语句中，可使用一个用于将  `?`  作为可替换参数的选择子句以及一个单独的选择参数数组，会避免SQL 注入。**
+
+正例：
+
+```java
+//	使用一个可替换参数
+
+String mSelectionClause =	"var = ?";
+
+String[] selectionArgs = {""};
+
+selectionArgs[0] = mUserInput;
+```
+
+反例：
+
+```java
+//	拼接用户输入内容和列名
+
+String mSelectionClause =	"var = " + mUserInput;
+```
+
+</br>
+
+### Bit map、Drawable 与动画
+
+**`强制`**  **加载大图片或者一次性加载多张图片，应该在异步线程中进行。图片的加载，涉及到 IO 操作，以及 CPU 密集操作，很可能引起卡顿。**
+
+正例：
+
+```java
+class BitmapWorkerTask extends AsyncTask<Integer, Void, Bitmap> {
+
+    ...
+
+    //	在后台进行图片解码
+
+    @Override
+
+    protected Bitmap doInBackground(Integer... params) {
+
+        final Bitmap bitmap = BitmapFactory.decodeFile("some path");
+
+        return bitmap;
+
+    }
+
+    ...
+
+}
+```
+
+反例：
+
+```java
+Button btnLoadImage = (Button) findViewById(R.id.btn);
+
+btnLoadImage.setOnClickListener(new OnClickListener(){
+
+    public void onClick(View v) {
+
+  		  Bitmap bitmap = BitmapFactory.decodeFile("some path");
+
+    }
+
+});
+```
+
+</br>
+
+**`强制`**  **在 `ListView`，`ViewPager`，`RecyclerView`，`GirdView` 等组件中使用图片时，应做好图片的缓存，避免始终持有图片导致内存泄露，也避免重复创建图片，引起性 能 问 题 。 建 议 使 用Fresco （ https://github.com/facebook/fresco ）、 Glide（https://github.com/bumptech/glide）等图片库。**
+
+正例：
+
+```java
+//例如使用系统	LruCache 缓存:
+
+private LruCache<String, Bitmap> mMemoryCache;
+
+@Override
+protected void onCreate(Bundle savedInstanceState) {
+
+    ...
+
+    //	获取可用内存的最大值，使用内存超出这个值将抛出 OutOfMemory 异常。LruCache 通过构造函数传入缓存值，以 KB 为单位。
+    final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
+
+    //	把最大可用内存的 1/8 作为缓存空间
+    final int cacheSize = maxMemory / 8;
+
+    mMemoryCache = new LruCache<String, Bitmap>(cacheSize) {
+
+        @Override
+        protected int sizeOf(String key, Bitmap bitmap) {
+
+            return bitmap.getByteCount() / 1024;
+
+        }
+
+    };
+
+    ...
+
+}
+
+public void addBitmapToMemoryCache(String key, Bitmap bitmap) {
+
+    if (getBitmapFromMemCache(key) == null) {
+
+    		mMemoryCache.put(key, bitmap);
+
+    }
+
+}
+
+public Bitmap getBitmapFromMemCache(String key) {
+
+		return mMemoryCache.get(key);
+
+}
+
+public void loadBitmap(int resId, ImageView imageView) {
+
+    final String imageKey = String.valueOf(resId);
+
+    final Bitmap bitmap = getBitmapFromMemCache(imageKey);
+
+    if (bitmap != null) {
+
+  		  mImageView.setImageBitmap(bitmap);
+
+    } else {
+
+        mImageView.setImageResource(R.drawable.image_placeholder);
+
+        BitmapWorkerTask task = new BitmapWorkerTask(mImageView);
+
+        task.execute(resId);
+	
+    }
+
+}
+
+ 
+
+class BitmapWorkerTask extends AsyncTask<Integer, Void, Bitmap> {
+
+    ...
+
+    //	在后台进行图片解码
+
+    @Override
+    protected Bitmap doInBackground(Integer... params) {
+
+        final Bitmap bitmap = decodeSampledBitmapFromResource(getResources(),
+
+        params[0], 100, 100));
+
+        addBitmapToMemoryCache(String.valueOf(params[0]), bitmap);
+
+        return bitmap;
+
+    }
+
+    ...
+
+}
+```
+
+反例：
+
+没有存储，每次都需要解码，或者有缓存但是没有合适的淘汰机制，导致缓存效果
+
+很差，依然经常需要重新解码。
+
+</br>
+
+**`强制`  png 图片使用tinypng 或者类似工具压缩处理，减少包体积。**
+
+</br>
+
+`建议`  **应根据实际展示需要，压缩图片，而不是直接显示原图。手机屏幕比较小，直接显示原图，并不会增加视觉上的收益，但是却会耗费大量宝贵的内存。**
+
+正例：
+
+```java
+public static Bitmap decodeSampledBitmapFromResource(Resources res, int resId,
+
+    int reqWidth, int reqHeight) {
+
+    //	首先通过 inJustDecodeBounds=true 获得图片的尺寸
+
+    final BitmapFactory.Options options = new BitmapFactory.Options();
+
+    options.inJustDecodeBounds = true;
+
+    BitmapFactory.decodeResource(res, resId, options);
+
+    //	然后根据图片分辨率以及我们实际需要展示的大小，计算压缩率
+
+    options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+
+    //	设置压缩率，并解码
+
+    options.inJustDecodeBounds = false;
+
+    return BitmapFactory.decodeResource(res, resId, options);
+
+}
+```
+
+反例：
+
+不经压缩显示原图。
+
